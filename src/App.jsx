@@ -1,33 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useRef, useEffect } from 'react'
+import catdance from '@/assets/catdance.gif';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [color, setColor] = useState(0)
+  const [position, setPosition] = useState({ top: 0, left: 0})
+  const [velocity, setVelocity] = useState({ x:2, y:2 })
+  const emoteRef = useRef(null)
+
+  const colors =  [
+    'green',
+    'red'
+  ]
+
+  useEffect(() => {
+    const updatePosition = () => {
+      setPosition({
+        top: position.top += velocity.x,
+        left: position.left += velocity.y
+      })
+    }
+    requestAnimationFrame(updatePosition);
+  }, position)
+
 
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <img 
+        src={catdance}
+        ref={emoteRef}
+        style={{ 
+          position: 'absolute', 
+          top: position.top, 
+          left: position.left }}/>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }

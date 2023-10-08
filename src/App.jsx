@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import catdance from '@/assets/catdance.gif';
+import catdance from '/catdance.gif';
 
 function App() {
   const [position, setPosition] = useState({ top: 0, left: 0})

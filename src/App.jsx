@@ -2,25 +2,41 @@ import { useState, useRef, useEffect } from 'react'
 import catdance from '@/assets/catdance.gif';
 
 function App() {
-  const [color, setColor] = useState(0)
   const [position, setPosition] = useState({ top: 0, left: 0})
-  const [velocity, setVelocity] = useState({ x:2, y:2 })
+  const [velocity, setVelocity] = useState({ x:0.01, y:0.01 })
   const emoteRef = useRef(null)
 
-  const colors =  [
-    'green',
-    'red'
-  ]
+  const windowWidth = window.innerWidth
+  const windowHeight = window.innerHeight
+  const mins = 0.008
+  const maxs = 0.012
+
+  const getRandomArbitrary = (sign, min, max) => {
+    return sign * (Math.random() * (max - min) + min);
+  }
+
+  const updatePosition = () => {
+    let newTop = position.top + velocity.y
+    let newLeft = position.left + velocity.x
+    let signy = Math.sign(velocity.y)
+    let signx = Math.sign(velocity.x)
+  
+    if(newTop >= windowHeight || newTop <= 0) {
+      setVelocity(prevVelocity => ({ x: getRandomArbitrary(signx, mins, maxs), y: -prevVelocity.y }))
+    }
+    if(newLeft >= windowWidth || newLeft <= 0) {
+      setVelocity(prevVelocity => ({ x: -prevVelocity.x, y: getRandomArbitrary(signy, mins, maxs) }))
+    }
+  
+    setPosition({
+      top: newTop,
+      left: newLeft
+    })
+  }
 
   useEffect(() => {
-    const updatePosition = () => {
-      setPosition({
-        top: position.top += velocity.x,
-        left: position.left += velocity.y
-      })
-    }
-    requestAnimationFrame(updatePosition);
-  }, position)
+    updatePosition()
+  }, [position])
 
 
   return (
@@ -32,7 +48,8 @@ function App() {
         style={{ 
           position: 'absolute', 
           top: position.top, 
-          left: position.left }}/>
+          left: position.left,
+          scale: '500%'}}/>
       </div>
     </>
   )
